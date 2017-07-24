@@ -1,0 +1,46 @@
+CC=g++
+FLAGS=-Wall -pedantic -g -D__STDC_CONSTANT_MACROS -std=c++11
+ULINKS=-lBasicUsageEnvironment -lUsageEnvironment -lliveMedia -lgroupsock -lx264 -lswscale -lswresample -lavformat -lavdevice -lavcodec -lavutil -lavfilter -lpostproc
+
+INCPATH=/home/zou/work/RSTPServer/FFmpegLive555Lib/Rtsp/include/
+LIBPATH=/home/zou/work/RSTPServer/FFmpegLive555Lib/Rtsp/lib/
+
+
+INCLUDES=-I$(INCPATH)ffmpeg \
+-I$(INCPATH)x264 \
+-I$(INCPATH)BasicUsageEnvironment \
+-I$(INCPATH)UsageEnvironment \
+-I$(INCPATH)liveMedia \
+-I$(INCPATH)groupsock
+
+
+LIBS= -L$(LIBPATH)ffmpeg \
+-L$(LIBPATH)x264
+
+
+all:	FFmpegDecoder.o FFmpegH264Encoder.o FFmpegH264Source.o  LiveRTSPServer.o LiveServerMediaSubsession.o main.o 
+		g++ -o spyPanda  FFmpegDecoder.o  FFmpegH264Encoder.o  FFmpegH264Source.o  LiveRTSPServer.o  LiveServerMediaSubsession.o  main.o $(LIBPATH)libliveMedia.a $(LIBPATH)libgroupsock.a $(LIBPATH)libBasicUsageEnvironment.a $(LIBPATH)libUsageEnvironment.a $(LIBS) -lswscale -lswresample -lavformat -lavdevice -lavcodec -lavutil -lavfilter -lpostproc -lx264 -pthread  -lrt -lm
+
+FFmpegDecoder.o:	FFmpegDecoder.cpp
+		$(CC) $(FLAGS) $(INCLUDES) FFmpegDecoder.cpp -c
+
+FFmpegH264Encoder.o:	FFmpegH264Encoder.cpp
+		$(CC) $(FLAGS) $(INCLUDES) FFmpegH264Encoder.cpp -c
+
+FFmpegH264Source.o: FFmpegH264Source.cpp
+		$(CC) $(FLAGS) $(INCLUDES) FFmpegH264Source.cpp -c
+
+LiveRTSPServer.o: LiveRTSPServer.cpp
+	$(CC) $(FLAGS) $(INCLUDES) LiveRTSPServer.cpp -c
+
+LiveServerMediaSubsession.o: LiveServerMediaSubsession.cpp
+	$(CC) $(FLAGS) $(INCLUDES) LiveServerMediaSubsession.cpp -c
+
+main.o:	main.cpp
+		$(CC) $(FLAGS) $(INCLUDES) main.cpp -c
+
+once:
+		$(CC) $(FLAGS)  $(INCLUDES) $(ULINKS) *.c *.cpp -o FFmpegRTSPServer
+
+clean:
+	rm -f *.o spyPanda
