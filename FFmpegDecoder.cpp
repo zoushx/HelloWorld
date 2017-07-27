@@ -129,7 +129,7 @@ namespace MESAI
                     MESAI::swap_t *mp=&swap;
 
                     mp->decoder = this;
-                    mp->data = ((AVPicture *)pFrameRGB)->data[0];
+                    mp->data = ((AVPicture *)pFrameRGB)->data[0]; //地址不变
 
                     onFrame((uint8_t*)mp);
 
